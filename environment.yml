@@ -1,0 +1,31 @@
+name: general
+channels:
+- conda-forge
+dependencies:
+- pyresample
+- pygrib
+- scipy
+- pyproj
+- shapely
+- shap
+- python>=3.9
+- pip
+- cartopy>=0.21
+- h5py
+- pytables
+- numexpr
+- cython
+- netcdf4
+- numpy
+- pandas
+- xarray
+- matplotlib
+- satpy
+- metpy
+- cmasher
+- dask
+- torchmetrics
+- pytorch-lightning>=1.8
+- pytorch
+- arm_pyart
+- kornia
