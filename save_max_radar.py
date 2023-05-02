@@ -25,7 +25,6 @@ from dask import delayed
 import gc
 
 os.environ['HDF5_USE_FILE_LOCKING']="FALSE" #allows access to files on server
-os.environ['SATPY_CONFIG_PATH'] = '/home/sortland/ci_ltg/PPP_config/' #Contains satpy configuration files- modify as needed
 
 sys.path.insert(0,'/home/sortland/ci_ltg') #specify current working directory- modify as needed
 PWD = os.environ['PWD']+'/'

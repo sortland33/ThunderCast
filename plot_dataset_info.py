@@ -29,7 +29,6 @@ import matplotlib
 import errno
 
 os.environ['HDF5_USE_FILE_LOCKING']="FALSE"
-os.environ['SATPY_CONFIG_PATH'] = '/home/sortland/ci_ltg/PPP_config/'
 
 #This file will create figures to display the number of sample regions in each month and the number of samples
 # per region for training, validation, and testing.

@@ -27,7 +27,6 @@ import psutil
 import errno
 
 os.environ['HDF5_USE_FILE_LOCKING'] = 'FALSE'
-os.environ['SATPY_CONFIG_PATH'] = '/home/sortland/ci_ltg/PPP_config/'
 os.environ['MALLOC_TRIM_THRESHOLD_'] = '0'
 
 sys.path.insert(0, '/home/sortland/ci_ltg')

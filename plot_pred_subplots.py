@@ -37,7 +37,6 @@ import matplotlib
 
 # python plot_pred_subplots.py -DT 2021-08-25-18-31 -t 5 -lat 41.41 -lon -90.85 -hs 55
 
-os.environ['SATPY_CONFIG_PATH'] = '/home/sortland/ci_ltg/PPP_config/'
 os.environ['HDF5_USE_FILE_LOCKING']="FALSE"
 
 def mkdir_p(path): #make directory

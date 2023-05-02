@@ -42,7 +42,6 @@ import matplotlib
 #Run example:
 #python torchlightning_predict.py -DT 2022-08-27-15-51 -t 2 -lat 33.98 -lon -83.46
 
-os.environ['SATPY_CONFIG_PATH'] = '/home/sortland/ci_ltg/PPP_config/'
 os.environ['HDF5_USE_FILE_LOCKING']="FALSE"
 
 def mkdir_p(path): #make directory path
