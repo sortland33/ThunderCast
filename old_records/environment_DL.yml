@@ -1,0 +1,47 @@
+name: deep_learning_env
+channels:
+- conda-forge
+- defaults
+dependencies:
+- cartopy
+- tensorflow-gpu
+- zarr
+- lightgbm
+- pyresample
+- pygrib
+- h5py
+- hdf5
+- netcdf4
+- numpy
+- pytables
+- pandas
+- xarray
+- scikit-learn
+- scikit-image
+- imageio
+- statsmodels
+- scipy
+- ipython
+- matplotlib
+- pyproj
+- shapely
+- shap
+- descartes
+- geojson
+- python
+- six
+- pip
+- pyclipper
+- seaborn
+- metpy
+- cmasher
+- pydot
+- rasterio
+- satpy
+- dask
+- pytorch
+- pip:
+  - geojson-rewind
+  - nvidia-ml-py3
+  - tensorboard
+  - torch_tb_profiler

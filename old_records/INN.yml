@@ -1,0 +1,47 @@
+name: INN
+channels:
+- conda-forge
+- defaults
+dependencies:
+- tensorflow-gpu=2.1
+- zarr
+- lightgbm
+- pyresample
+- cython
+- pygrib
+- h5py=2.10.0
+- hdf5
+- netcdf4
+- numpy
+- pytables
+- pandas
+- xarray
+- scikit-learn
+- scikit-image
+- imageio
+- statsmodels
+- scipy
+- ipython
+- matplotlib
+- pyproj
+- shapely
+- shap
+- descartes
+- geojson
+- python=3.7
+- six
+- pip
+- pyclipper
+- cartopy
+- seaborn
+- metpy
+- cmasher
+- satpy
+- pydot
+- pip:
+  - geojson-rewind
+  - git+https://github.com/deeplycloudy/lmatools.git
+  - git+https://github.com/deeplycloudy/stormdrain.git
+  - git+https://github.com/albermax/innvestigate.git@develop_v2.0
+  #- pyhdf
+  - mysql.connector

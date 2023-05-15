@@ -1,0 +1,32 @@
+sensor_name: visir/abi
+
+composites:
+  IRCloudPhaseFC:
+    compositor: !!python/name:satpy.composites.GenericCompositor
+    prerequisites:
+    - compositor: !!python/name:satpy.composites.DifferenceCompositor
+      prerequisites:
+      - name: C14
+        calibration: brightness_temperature
+      - name: C15
+        calibration: brightness_temperature
+    - compositor: !!python/name:satpy.composites.DifferenceCompositor
+      prerequisites:
+        - name: C11
+          calibration: brightness_temperature
+        - name: C14
+          calibration: brightness_temperature
+    - name: C14
+      calibration: brightness_temperature
+      standard_name: IRCloudPhaseFC
+    
+  DayCloudPhaseFC:
+    compositor: !!python/name:satpy.composites.GenericCompositor
+    prerequisites:
+    - name: C02
+      calibration: reflectance
+    - name: C05
+      calibration: reflectance
+    - name: C13
+      calibration: brightness_temperature
+  

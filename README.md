@@ -44,6 +44,8 @@ If you use any of these files in entirety or part, please cite our paper.
     - Run torchlightning_main.py using sbatch and slurm (testing).
 5. extract_TB_data.py
     - During training/validation/testing Lightning saves the desired model statistics in a tensorboard file. This file gets the information out of the tensorboard file and plots it as needed. 
+6. run_tbparse.sh
+    - Run extract_TB_data.py in a cluster environment (slurm). 
 6. sort_test_set.py
     - For additional testing, this file sorts the test dataset into sub testing sets (by region for example).
 
@@ -61,6 +63,10 @@ If you use any of these files in entirety or part, please cite our paper.
     - Make performance and attribute diagrams using statistics generated when testing the model. 
 3. plot_glm.py
     - Plot GLM flash extent density with satellite imagery in a paneled figure. 
+4. climate_map.py
+    - Create a map of the United States with the climate regions colored.
+5. plot_rgb.py
+    - Create a RGB image from ABI data. 
 
 ## Other Files
 1. solar_angles.py

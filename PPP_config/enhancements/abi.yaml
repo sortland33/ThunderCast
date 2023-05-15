@@ -1,0 +1,21 @@
+enhancements:
+  IRCloudPhaseFC:
+    name: IRCloudPhaseFC
+    operations:
+    - name: color_limits
+      method: !!python/name:satpy.enhancements.stretch
+      kwargs: {stretch: 'crude', min_stretch: [-2.0, -6.0, 243], max_stretch: [4.0, 6.0, 293]}
+    - name: inverse
+      method: !!python/name:satpy.enhancements.invert
+      args:
+      - [true, true, false]
+  DayCloudPhaseFC:
+    name: DayCloudPhaseFC
+    operations:
+    - name: color_limits
+      method: !!python/name:satpy.enhancements.stretch
+      kwargs: {stretch: 'crude', min_stretch: [0, 0, 233.0], max_stretch: [90.0, 50.0, 293.0]}
+    - name: inverse
+      method: !!python/name:satpy.enhancements.invert
+      args:
+      - [false, false, true]
