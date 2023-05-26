@@ -3,7 +3,7 @@
 #The data from each scene can also be saved if desired.
 from __future__ import absolute_import, division, print_function, unicode_literals
 import sys, os
-os.environ['SATPY_CONFIG_PATH'] = '/home/sortland/ci_ltg/PPP_config/'
+os.environ['SATPY_CONFIG_PATH'] = '/home/sortland/thundercast/PPP_config/'
 from netCDF4 import Dataset
 from datetime import datetime, timedelta
 import numpy as np
@@ -62,11 +62,11 @@ def get_satpy_scene(abi_files):  # get satpy scene to be cropped to patches
 
 if __name__ == "__main__":
     ###User Input
-    date = '2022-07-01-14-01' #%Y-%m-%d-%H-%M
-    time_delta =120
-    center_lat = 28.517
-    center_lon = -80.649
-    hs = 159
+    date = '2022-08-27-20-11' #%Y-%m-%d-%H-%M
+    time_delta = 60
+    center_lat = 36.13
+    center_lon = -109.56
+    hs = 79
 
     ###Open and get information from inputs
     rootoutdir = '/ships19/grain/convective_init/rgbs'
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     bad_data_files = []
 
     #Just a file with some plotting projection information in it.
-    goesnc = Dataset('/home/sortland/ci_ltg/proj_files/GOES_East.nc', 'r')
+    goesnc = Dataset('/home/sortland/thundercast/proj_files/GOES_East.nc', 'r')
     gip = goesnc.variables['goes_imager_projection']
     geoproj = ccrs.Geostationary(central_longitude=gip.longitude_of_projection_origin, \
                                  sweep_axis=gip.sweep_angle_axis, \
@@ -152,7 +152,7 @@ if __name__ == "__main__":
 
         #Visible channel images
         VIScrop_scn = crop_scn
-        VIScrop_scn.load(['DayCloudPhaseFC'])
+        VIScrop_scn.load(['COD_DCP'])
         VISresamp = VIScrop_scn.resample(resampler='native')
 
         #Specify output file locations. Change as needed
@@ -165,29 +165,39 @@ if __name__ == "__main__":
         IRfilepath = os.path.join(IRoutdir, dt.strftime('GOES16_IR_%Y_%m_%d_%H_%M_%j.png'))
         VISfilepath = os.path.join(VISoutdir, dt.strftime('GOES16_VIS_%Y_%m_%d_%H_%M_%j.png'))
 
-        # Plot IR False Color Image:
-        fig = plt.figure(figsize=(12,12))
-        IRimg_data = get_enhanced_image(IRresamp['IRCloudPhaseFC']).data
-        IRimg_data.plot.imshow(rgb='bands')
-        plt.title((' ').join([timestamp, 'UTC']))
-        plt.xlabel('')
-        plt.ylabel('')
-        plt.xticks([])
-        plt.yticks([])
-        #If you want to save the RGB file:
-        plt.savefig(IRfilepath,bbox_inches='tight')
-        print('IR RGB images were created')
-        plt.close(fig)
-        #Uncomment code below to save the data as a netcdf:
-        #IRresamp.save_dataset(writer='simple_image', dataset_id='IRCloudPhaseFC', filename=IRfilepath)
+        # # Plot IR False Color Image:
+        # fig = plt.figure(figsize=(8,8))
+        # IRimg_data = get_enhanced_image(IRresamp['IRCloudPhaseFC']).data
+        # IRimg_data.plot.imshow(rgb='bands')
+        # plt.title((' ').join([timestamp, 'UTC']))
+        # plt.xlabel('')
+        # plt.ylabel('')
+        # plt.xticks([])
+        # plt.yticks([])
+        # #If you want to save the RGB file:
+        # plt.savefig(IRfilepath,bbox_inches='tight')
+        # print('IR RGB images were created')
+        # plt.close(fig)
+        # #Uncomment code below to save the data as a netcdf:
+        # #IRresamp.save_dataset(writer='simple_image', dataset_id='IRCloudPhaseFC', filename=IRfilepath)
 
         # Visible False Color Image:
-        fig = plt.figure(figsize=(12,12))
-        VISimg_data = get_enhanced_image(VISresamp['DayCloudPhaseFC']).data
+        fig = plt.figure(figsize=(8,8))
+        VISimg_data = get_enhanced_image(VISresamp['COD_DCP']).data
+        op = VISimg_data.orbital_parameters
+        pyproj_obj = Proj(proj='geos', h=op['projection_altitude'],
+                          lon_0=op['projection_longitude'], sweep='x')
+        geoproj_vis = ccrs.Geostationary(central_longitude=op['projection_longitude'], sweep_axis='x', satellite_height=op['projection_altitude'])
+        ax = fig.add_axes([0, 0, 1, 1], projection=geoproj_vis)
         VISimg_data.plot.imshow(rgb='bands')
+        state_borders = cfeature.NaturalEarthFeature(category='cultural', name='admin_1_states_provinces_lakes',
+                                                     scale='50m', facecolor='none')
+        ax.add_feature(state_borders, edgecolor='cornsilk', linewidth=0.5)
+
         #Uncomment code below to save the data as a netcdf:
         #VISresamp.save_dataset(writer='simple_image', dataset_id='DayCloudPhaseFC', filename=VISfilepath)
-        plt.title((' ').join([timestamp, 'UTC']))
+        titlename = (' ').join([timestamp, 'UTC'])
+        plt.title(titlename, fontsize=16)
         plt.xlabel('')
         plt.ylabel('')
         plt.xticks([])

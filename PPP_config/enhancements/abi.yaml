@@ -19,3 +19,13 @@ enhancements:
       method: !!python/name:satpy.enhancements.invert
       args:
       - [false, false, true]
+  COD_DCP:
+    name: COD_DCP
+    operations:
+    - name: color_limits
+      method: !!python/name:satpy.enhancements.stretch
+      kwargs: {stretch: 'crude', min_stretch: [219.65, 0, 1], max_stretch: [280.65, 78.0, 59.0]}
+    - name: inverse
+      method: !!python/name:satpy.enhancements.invert
+      args:
+      - [true, false, false]

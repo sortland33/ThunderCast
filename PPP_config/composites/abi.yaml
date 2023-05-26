@@ -29,4 +29,13 @@ composites:
       calibration: reflectance
     - name: C13
       calibration: brightness_temperature
-  
+
+  COD_DCP: #order matters here!
+    compositor: !!python/name:satpy.composites.GenericCompositor
+    prerequisites:
+    - name: C13
+      calibration: brightness_temperature
+    - name: C02
+      calibration: reflectance
+    - name: C05
+      calibration: reflectance
