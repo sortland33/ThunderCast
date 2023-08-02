@@ -5,6 +5,8 @@ from typing import List, Optional
 import torch
 from torch import Tensor
 from typing_extensions import Literal
+import torch.nn as nn
+#from torchmetrics.regression import MeanSquaredError
 
 from torchmetrics.functional.classification.stat_scores import (
     _binary_stat_scores_arg_validation,
@@ -351,3 +353,70 @@ class NoRes(Metric):
         num = self.tp + self.fn #observed yes
         denom = self.tp + self.fn + self.fp + self.tn #all observed
         return _safe_divide(num, denom)
+
+#fraction skill score
+class FSS(Metric):
+    def __init__(self, threshold= 0.5, window=3):
+        super().__init__()
+        self.threshold = threshold
+        self.window = window
+        self.add_state('fss', default=[], dist_reduce_fx='cat')
+
+    def update(self, preds: torch.Tensor, target: torch.Tensor):
+        preds = preds[:, 1, :, :]
+        batch_size = preds.shape[0]
+        preds_binary = torch.where((preds >= self.threshold), 1., 0.)
+        pool = nn.AvgPool2d(self.window, stride=1, padding=0)
+        target_density = pool(target.to(torch.float32))
+        pred_density = pool(preds_binary)
+        n_density_pixels = (target_density.shape[1]*target_density.shape[2])
+        O_M = target_density - pred_density
+        for i in range(batch_size):
+            O_M_ssum = torch.sum(O_M[i, :, :]*O_M[i, :, :])
+            MSE_n = O_M_ssum/n_density_pixels
+            O_n_ssum = torch.sum(target_density[i, :, :]*target_density[i, :, :])
+            M_n_ssum = torch.sum(pred_density[i, :, :]*pred_density[i, :, :])
+            MSE_n_ref = (O_n_ssum + M_n_ssum)/n_density_pixels
+            #print(i, MSE_n, MSE_n_ref)
+            if MSE_n_ref == 0:
+                FSS = 1 - MSE_n
+            else:
+                FSS = 1 - (MSE_n/MSE_n_ref)
+            self.fss.append(FSS)
+
+    def compute(self):
+        return torch.mean(self.fss)
+
+class FSS_random(Metric):
+    def __init__(self):
+        super().__init__()
+        self.add_state('obs_true', default=torch.tensor(0), dist_reduce_fx="sum")
+        self.add_state('obs_all', default=torch.tensor(0), dist_reduce_fx="sum")
+
+    def update(self, target: torch.Tensor):
+        obs_true = torch.sum(target).long()
+        obs_all = torch.numel(target)
+        self.obs_true += obs_true
+        self.obs_all += obs_all
+
+    def compute(self):
+        return _safe_divide(self.obs_true, self.obs_all)
+
+class FSS_uniform(Metric):
+    def __init__(self):
+        super().__init__()
+        self.add_state('obs_true', default=torch.tensor(0), dist_reduce_fx="sum")
+        self.add_state('obs_all', default=torch.tensor(0), dist_reduce_fx="sum")
+
+    def update(self, target: torch.Tensor):
+        obs_true = torch.sum(target).long()
+        obs_all = torch.numel(target)
+        self.obs_true += obs_true
+        self.obs_all += obs_all
+
+    def compute(self):
+        f_o = _safe_divide(self.obs_true, self.obs_all)
+        uniform = 0.5 + (f_o/2)
+        return uniform
+
+
